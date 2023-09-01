@@ -1,0 +1,2 @@
+Have you ever been mistaken for someone else? With more than 7.8 billion people, do you think you are unique? or can there be someone similar to you in another part of the world?
+These are questions you may have asked yourself in the past, so this project tries to find your clone in the world. Dare to find them or find out if you are unique!
