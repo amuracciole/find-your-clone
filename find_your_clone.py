@@ -64,7 +64,7 @@ for person in people:
 people_encode_list = encode(my_images)
 
 #Check if photo is already in the list
-photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/Andres_Muracciole.jpg"
+photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/photo.jpg"
 photo_read = cv2.imread(photo)
 your_photo_list.append(photo_read)
 encoded_photo=encode(your_photo_list)
@@ -78,7 +78,9 @@ for x in encoded_photo:
     matches = fr.compare_faces(people_encode_list, x)
     distance = fr.face_distance(people_encode_list, x)
 
-    #print(distance, matches)
+    #Distance -> number betwen 0 and 1
+    #Mathes -> Return True or False
+    print(distance, matches)
     
     matches_index = np.argmin(distance)
 
@@ -93,5 +95,5 @@ for x in encoded_photo:
         photo_clon = cv2.imread(photo_clon_path)
         cv2.imshow("Tu clon:", photo_clon)
 
-        #Avoid closing windosw automatically. Waiting until press a key
+        #Avoid closing windows automatically. Waiting until press a key
         cv2.waitKey(0)
