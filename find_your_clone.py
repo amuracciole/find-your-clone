@@ -2,112 +2,96 @@ import cv2
 import face_recognition as fr
 import os
 import numpy as np
-from datetime import datetime
-import time
 import shutil
 
 # crear base de datos
-ruta = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos'
-mis_imagenes = []
-nombres_empleados = []
-lista_empleados = os.listdir(ruta)
+main_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos'
+my_images = []
+people_names = []
+your_photo_list=[]
 
-for nombre in lista_empleados:
-    imagen_actual = cv2.imread(f'{ruta}/{nombre}')
-    mis_imagenes.append(imagen_actual)
-    nombres_empleados.append(os.path.splitext(nombre)[0])
+# Encode images
+def encode(images):
+    encode_list = []
 
-# codificar imagenes
-def codificar(imagenes):
+    # Images to rgb
+    for image in images:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    # crear una lista nueva
-    lista_codificada = []
+        # Enconding
+        encode = fr.face_encodings(image)[0]
 
-    # pasar todas las imagenes a rgb
-    for imagen in imagenes:
-        imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+        # Add to list
+        encode_list.append(encode)
 
-        # codificar
-        codificado = fr.face_encodings(imagen)[0]
+    return encode_list
 
-        # agregar a la lista
-        lista_codificada.append(codificado)
+#Check if photo already exist
+def checkExistingPhoto(people_encode_list, enconded_photo):
+    #print(people_encode_list)
+    #print(enconded_photo)
+    found = False
 
-    # devolver lista codificada
-    return lista_codificada
-
-def checkExistingPhoto(lista_empleados_codificada, foto_codificada):
-    print("Checking...")
-    print(lista_empleados_codificada)
-    #print("·······················")
-    print(foto_codificada)
-    # Variable para realizar la búsqueda
-    encontrado = False
-
-    # Iterar sobre la lista de arrays
-
-    for array in lista_empleados_codificada:
-        if np.array_equal(foto_codificada[0], array):
-            print("El array está en la lista.")
-            encontrado=True
+    for array in people_encode_list:
+        if np.array_equal(enconded_photo[0], array):
+            found=True
             break
-        else:
-            print("El array no está en la lista.")
-        return(encontrado)
+        return(found)
     
+#Save image in case photo does not exits
 def saveImage(image):
     print("Saving image...")
-    directorio_destino = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos/"
+    #main_path = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos/"
     personName = input("What is your name?: ")
-    # Comprobar si el directorio de destino existe, si no, créalo
-    if not os.path.exists(directorio_destino):
-        print("dentro")
-        os.makedirs(directorio_destino)
-    ruta_copia = os.path.join(directorio_destino, personName + ".jpg")
-    print(ruta_copia)
-    print(image)
-    shutil.copy(image, ruta_copia)
+    # Chack if path exists, if not, create it
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    copy_path = os.path.join(main_path, personName + ".jpg")
+    shutil.copy(image, copy_path)
 
-#Codifico las fotos que hay en la base de datos
-lista_empleados_codificada = codificar(mis_imagenes)
 
-#Tomo la foto de prueba para comparar
-photo_test_list=[]
-photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/Andres Muracciole.jpg"
-photo_test = cv2.imread(photo)
-photo_test_list.append(photo_test)
-foto_codificada=codificar(photo_test_list)
-#print("FOTO PRUEBA CODIFICADA")
-#print(foto_codificada_2)
+############################
+############################
 
-#Compruebo queesa foto ya no exista:
-existing=checkExistingPhoto(lista_empleados_codificada, foto_codificada)
+people = os.listdir(main_path)
+
+for person in people:
+    current_photo = cv2.imread(f'{main_path}/{person}')
+    my_images.append(current_photo)
+    people_names.append(os.path.splitext(person)[0])
+  
+# Encode photos in data base
+people_encode_list = encode(my_images)
+
+#Check if photo is already in the list
+photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/Andres_Muracciole.jpg"
+photo_read = cv2.imread(photo)
+your_photo_list.append(photo_read)
+encoded_photo=encode(your_photo_list)
+
+#Check if photo already exist
+existing=checkExistingPhoto(people_encode_list, encoded_photo)
 if existing == False:
-    #Guardo la foto en la base de datos si no existe aún
     saveImage(photo)
-else:
-    print("La foto ya existe")
 
-for x in foto_codificada:
-    coincidencias = fr.compare_faces(lista_empleados_codificada, x)
-    distancias = fr.face_distance(lista_empleados_codificada, x)
+for x in encoded_photo:
+    matches = fr.compare_faces(people_encode_list, x)
+    distance = fr.face_distance(people_encode_list, x)
 
-    #print(distancias, coincidencias)
+    #print(distance, matches)
     
-    indice_coincidencia = np.argmin(distancias)
+    matches_index = np.argmin(distance)
 
-    # Mostrar coincidencias si las hay
-    if distancias[indice_coincidencia] > 0.6:
-        print("No tienes ningun clon")
+    if distance[matches_index] > 0.6:
+        print("Sorry. You don´t have a clone... yet")
     else:
-        print("Hay coincidencia!")
-        nombre = nombres_empleados[indice_coincidencia]
-        print("Tu clon se llama: " + nombre)
+        name = people_names[matches_index]
+        print("Your clone name is: " + name)
 
-        # Mostrar la imagen obtenida
-        foto_clon_path=ruta+"/"+nombre+".jpg"
-        foto_clon = cv2.imread(foto_clon_path)
-        cv2.imshow("Tu clon:", foto_clon)
+        # Show image
+        photo_clon_path=main_path+"/"+name+".jpg"
+        photo_clon = cv2.imread(photo_clon_path)
+        cv2.imshow("Tu clon:", photo_clon)
 
-        #Para no cerrar enseguida
+        #Avoid closing windosw automatically. Waiting until press a key
         cv2.waitKey(0)
