@@ -79,8 +79,8 @@ for x in encoded_photo:
     distance = fr.face_distance(people_encode_list, x)
 
     #Distance -> number betwen 0 and 1
-    #Mathes -> Return True or False
-    print(distance, matches)
+    #Matches -> Return True or False
+    #print(distance, matches)
     
     matches_index = np.argmin(distance)
 

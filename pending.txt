@@ -6,3 +6,4 @@ vez que se corre el script
 previamente nzipeandola
 - Detectar si es la misma persona y no guardar la imagen aunque la imagen 
 sea diferente tecnicamente
+- Fijarse que este funcionando bien la funcion que chequea si la foto ya existe. Quizas haya que chequear antes esto antes de lo otro
