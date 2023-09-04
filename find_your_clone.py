@@ -6,6 +6,7 @@ import shutil
 
 # crear base de datos
 main_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos'
+secondary_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo'
 my_images = []
 people_names = []
 your_photo_list=[]
@@ -36,7 +37,7 @@ def checkExistingPhoto(people_encode_list, enconded_photo):
         if np.array_equal(enconded_photo[0], array):
             found=True
             break
-        return(found)
+    return(found)
     
 #Save image in case photo does not exits
 def saveImage(image):
@@ -49,10 +50,24 @@ def saveImage(image):
     copy_path = os.path.join(main_path, personName + ".jpg")
     shutil.copy(image, copy_path)
 
+#Delete DS_Store files
+def delete_ds_store_files(path):
+    file_list = os.listdir(path)
+
+    for file in file_list:
+        if file.endswith(".DS_Store"):
+            ruta_completa = os.path.join(path, file)         
+            try:
+                os.remove(ruta_completa)
+            except Exception as e:
+                print(f"No {file}: {e}")
+
 
 ############################
 ############################
 
+delete_ds_store_files(main_path)
+delete_ds_store_files(secondary_path)
 people = os.listdir(main_path)
 
 for person in people:
