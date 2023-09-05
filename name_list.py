@@ -1,1 +1,0 @@
-['Albert Einstein', 'Luis Suarez', 'Cristiano Ronaldo', 'Leonel Messi', 'Elon Musk', 'Andres Muracciole', 'Michael Jordan']

@@ -2,7 +2,7 @@ import cv2
 import face_recognition as fr
 import os
 import numpy as np
-import shutil
+from PIL import Image
 
 # crear base de datos
 main_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos'
@@ -10,6 +10,7 @@ secondary_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_
 photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/photo.jpg"
 people_names = []
 your_photo_list=[]
+quality_num=40
 
 # Encode images
 def encode(images):
@@ -38,14 +39,13 @@ def encode_complete_list(path):
     
     # Encode photos in data base
     my_images = encode(my_images)
-    
+    """
     os.chdir("/Users/andresmuracciole/Desktop/Proyectos/find_your_clone")
-    
     file_encode_list=open("encode_list.py", "a")
     file_encode_list.write(str(my_images))
     file_people_name_list=open("name_list.py", "a")
     file_people_name_list.write(str(people_names))
-    
+    """
     return(my_images, people_names)
 
 #Check if photo already exist
@@ -67,7 +67,9 @@ def saveImage(image):
     if not os.path.exists(main_path):
         os.makedirs(main_path)
     copy_path = os.path.join(main_path, personName + ".jpg")
-    shutil.copy(image, copy_path)
+    #shutil.copy(image, copy_path)
+    img = Image.open(image)
+    img.save(copy_path, optimize=True, quality=quality_num)
 
 #Delete DS_Store files
 def delete_files(path, file_name):
@@ -81,43 +83,23 @@ def delete_files(path, file_name):
             except Exception as e:
                 print(f"No {file}: {e}")
 
-
+def resize_photo():
+    img = Image.open(photo)
+    img.save(photo, optimize=True, quality=quality_num)
+    
 ############################
 ############################
-
 delete_files(main_path, ".DS_Store")
 delete_files(secondary_path, ".DS_Store")
 
-
 people_encode_list, people_names = encode_complete_list(main_path)
-print((people_encode_list))
-print((people_names))
-print(type(people_encode_list))
-print(type(people_names))
-
-
-open_file = open("encode_list.py")
-people_encode_list=open_file.read()
-open_file.close()
-#print(people_encode_list)
-
-open_file2 = open("name_list.py")
-people_names=open_file2.read()
-open_file2.close()
-#print(people_names)
-
-print((people_encode_list))
-print((people_names))
-print(type(people_encode_list))
-print(type(people_names))
-
-#FALTA CONVERTIR STR A LIST PARA QUE TERMINE DE FUNCIONAR
-
 
 #Check if photo is already in the list
+resize_photo()
 photo_read = cv2.imread(photo)
 your_photo_list.append(photo_read)
 encoded_photo=encode(your_photo_list)
+
 
 #Check if photo already exist
 existing=checkExistingPhoto(people_encode_list, encoded_photo)
@@ -143,7 +125,7 @@ for x in encoded_photo:
         # Show image
         photo_clon_path=main_path+"/"+name+".jpg"
         photo_clon = cv2.imread(photo_clon_path)
-        cv2.imshow("Tu clon:", photo_clon)
+        cv2.imshow("Your clon: " + name, photo_clon)
 
         #Avoid closing windows automatically. Waiting until press a key
         cv2.waitKey(0)

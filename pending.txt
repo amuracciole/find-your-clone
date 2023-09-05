@@ -1,10 +1,3 @@
-- Ver si puedo dejar codificado las imagenes y no tener que codificar cada 
-vez que se corre el script
-
-- Ver una forma optima de comparar los arrays
-
 - Tener comprimida las imagenes y solo retorna la que corresponda, 
 previamente nzipeandola
 
-- Detectar si es la misma persona y no guardar la imagen aunque la imagen 
-sea diferente tecnicamente
