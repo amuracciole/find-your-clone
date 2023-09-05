@@ -7,7 +7,7 @@ import shutil
 # crear base de datos
 main_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos'
 secondary_path = '/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo'
-my_images = []
+photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/photo.jpg"
 people_names = []
 your_photo_list=[]
 
@@ -27,10 +27,29 @@ def encode(images):
 
     return encode_list
 
+#Encode list of images
+def encode_complete_list(path):
+    my_images = []
+    people = os.listdir(path)
+    for person in people:
+        current_photo = cv2.imread(f'{path}/{person}')
+        my_images.append(current_photo)
+        people_names.append(os.path.splitext(person)[0])
+    
+    # Encode photos in data base
+    my_images = encode(my_images)
+    
+    os.chdir("/Users/andresmuracciole/Desktop/Proyectos/find_your_clone")
+    
+    file_encode_list=open("encode_list.py", "a")
+    file_encode_list.write(str(my_images))
+    file_people_name_list=open("name_list.py", "a")
+    file_people_name_list.write(str(people_names))
+    
+    return(my_images, people_names)
+
 #Check if photo already exist
 def checkExistingPhoto(people_encode_list, enconded_photo):
-    #print(people_encode_list)
-    #print(enconded_photo)
     found = False
 
     for array in people_encode_list:
@@ -51,11 +70,11 @@ def saveImage(image):
     shutil.copy(image, copy_path)
 
 #Delete DS_Store files
-def delete_ds_store_files(path):
+def delete_files(path, file_name):
     file_list = os.listdir(path)
 
     for file in file_list:
-        if file.endswith(".DS_Store"):
+        if file.endswith(file_name):
             ruta_completa = os.path.join(path, file)         
             try:
                 os.remove(ruta_completa)
@@ -66,20 +85,36 @@ def delete_ds_store_files(path):
 ############################
 ############################
 
-delete_ds_store_files(main_path)
-delete_ds_store_files(secondary_path)
-people = os.listdir(main_path)
+delete_files(main_path, ".DS_Store")
+delete_files(secondary_path, ".DS_Store")
 
-for person in people:
-    current_photo = cv2.imread(f'{main_path}/{person}')
-    my_images.append(current_photo)
-    people_names.append(os.path.splitext(person)[0])
-  
-# Encode photos in data base
-people_encode_list = encode(my_images)
+
+people_encode_list, people_names = encode_complete_list(main_path)
+print((people_encode_list))
+print((people_names))
+print(type(people_encode_list))
+print(type(people_names))
+
+
+open_file = open("encode_list.py")
+people_encode_list=open_file.read()
+open_file.close()
+#print(people_encode_list)
+
+open_file2 = open("name_list.py")
+people_names=open_file2.read()
+open_file2.close()
+#print(people_names)
+
+print((people_encode_list))
+print((people_names))
+print(type(people_encode_list))
+print(type(people_names))
+
+#FALTA CONVERTIR STR A LIST PARA QUE TERMINE DE FUNCIONAR
+
 
 #Check if photo is already in the list
-photo = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/photo.jpg"
 photo_read = cv2.imread(photo)
 your_photo_list.append(photo_read)
 encoded_photo=encode(your_photo_list)
