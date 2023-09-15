@@ -1,15 +1,15 @@
-const test = document.getElementById('upload2');
+//const test = document.getElementById('upload');
 
-test.addEventListener('click', () => {
-   fetch('http://localhost:8765/')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('responseData').innerText = JSON.stringify(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-});
+//test.addEventListener('click', () => {
+//   fetch('http://localhost:8765/')
+//        .then(response => response.json())
+//        .then(data => {
+//            document.getElementById('responseData').innerText = JSON.stringify(data);
+//        })
+//        .catch(error => {
+//            console.error('Error:', error);
+//        });
+//});
 
 
 const upload = document.getElementById('upload');

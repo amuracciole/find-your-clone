@@ -89,43 +89,44 @@ def resize_photo():
     
 ############################
 ############################
-delete_files(main_path, ".DS_Store")
-delete_files(secondary_path, ".DS_Store")
+def mainFunction():
+    delete_files(main_path, ".DS_Store")
+    delete_files(secondary_path, ".DS_Store")
 
-people_encode_list, people_names = encode_complete_list(main_path)
+    people_encode_list, people_names = encode_complete_list(main_path)
 
-#Check if photo is already in the list
-resize_photo()
-photo_read = cv2.imread(photo)
-your_photo_list.append(photo_read)
-encoded_photo=encode(your_photo_list)
+    #Check if photo is already in the list
+    resize_photo()
+    photo_read = cv2.imread(photo)
+    your_photo_list.append(photo_read)
+    encoded_photo=encode(your_photo_list)
 
 
-#Check if photo already exist
-existing=checkExistingPhoto(people_encode_list, encoded_photo)
-if existing == False:
-    saveImage(photo)
+    #Check if photo already exist
+    existing=checkExistingPhoto(people_encode_list, encoded_photo)
+    if existing == False:
+        saveImage(photo)
 
-for x in encoded_photo:
-    matches = fr.compare_faces(people_encode_list, x)
-    distance = fr.face_distance(people_encode_list, x)
+    for x in encoded_photo:
+        matches = fr.compare_faces(people_encode_list, x)
+        distance = fr.face_distance(people_encode_list, x)
 
-    #Distance -> number betwen 0 and 1
-    #Matches -> Return True or False
-    #print(distance, matches)
-    
-    matches_index = np.argmin(distance)
+        #Distance -> number betwen 0 and 1
+        #Matches -> Return True or False
+        #print(distance, matches)
+        
+        matches_index = np.argmin(distance)
 
-    if distance[matches_index] > 0.6:
-        print("Sorry. You don´t have a clone... yet")
-    else:
-        name = people_names[matches_index]
-        print("Your clone name is: " + name)
+        if distance[matches_index] > 0.6:
+            print("Sorry. You don´t have a clone... yet")
+        else:
+            name = people_names[matches_index]
+            print("Your clone name is: " + name)
 
-        # Show image
-        photo_clon_path=main_path+"/"+name+".jpg"
-        photo_clon = cv2.imread(photo_clon_path)
-        cv2.imshow("Your clon: " + name, photo_clon)
+            # Show image
+            photo_clon_path=main_path+"/"+name+".jpg"
+            photo_clon = cv2.imread(photo_clon_path)
+            cv2.imshow("Your clon: " + name, photo_clon)
 
-        #Avoid closing windows automatically. Waiting until press a key
-        cv2.waitKey(0)
+            #Avoid closing windows automatically. Waiting until press a key
+            cv2.waitKey(0)
