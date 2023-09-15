@@ -16,13 +16,16 @@ const upload = document.getElementById('upload');
 
 upload.addEventListener('click', () => {
     const fileInput = document.getElementById('fileInput');
+    const nameInput = document.getElementById('nameInput');
     const file = fileInput.files[0];
     
     if (file) {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('http://localhost:8765/upload/', {
+        const enteredName = nameInput.value;
+
+        fetch(`http://localhost:8765/upload/${enteredName}`, {
             method: 'POST',
             body: formData,
         })

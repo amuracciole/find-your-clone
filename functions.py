@@ -59,10 +59,11 @@ def checkExistingPhoto(people_encode_list, enconded_photo):
     return(found)
     
 #Save image in case photo does not exits
-def saveImage(image):
-    print("Saving image...")
+def saveImage(image, name):
+    #print("Saving image...")
     #main_path = "/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/photos/"
-    personName = input("What is your name?: ")
+    #personName = input("What is your name?: ")
+    personName = name
     # Chack if path exists, if not, create it
     if not os.path.exists(main_path):
         os.makedirs(main_path)
@@ -81,7 +82,8 @@ def delete_files(path, file_name):
             try:
                 os.remove(ruta_completa)
             except Exception as e:
-                print(f"No {file}: {e}")
+                #print(f"No {file}: {e}")
+                continue
 
 def resize_photo():
     img = Image.open(photo)
@@ -89,7 +91,7 @@ def resize_photo():
     
 ############################
 ############################
-def mainFunction():
+def mainFunction(personName):
     delete_files(main_path, ".DS_Store")
     delete_files(secondary_path, ".DS_Store")
 
@@ -105,7 +107,7 @@ def mainFunction():
     #Check if photo already exist
     existing=checkExistingPhoto(people_encode_list, encoded_photo)
     if existing == False:
-        saveImage(photo)
+        saveImage(photo, personName)
 
     for x in encoded_photo:
         matches = fr.compare_faces(people_encode_list, x)
@@ -118,10 +120,11 @@ def mainFunction():
         matches_index = np.argmin(distance)
 
         if distance[matches_index] > 0.6:
-            print("Sorry. You don´t have a clone... yet")
+            return("Sorry. You don´t have a clone... yet")
+            #print("Sorry. You don´t have a clone... yet")
         else:
             name = people_names[matches_index]
-            print("Your clone name is: " + name)
+            #print("Your clone name is: " + name)
 
             # Show image
             photo_clon_path=main_path+"/"+name+".jpg"
@@ -130,3 +133,4 @@ def mainFunction():
 
             #Avoid closing windows automatically. Waiting until press a key
             cv2.waitKey(0)
+            return("Your clone name is: " + name)

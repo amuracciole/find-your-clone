@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
-from find_your_clone import *
+from functions import *
 
 
 app = FastAPI()
@@ -22,13 +22,13 @@ templates = Jinja2Templates(directory="templates")
 def index():
     return {"message": "pagina principal"}
 
-@app.post("/upload/")
-async def upload_file(file: UploadFile):
+@app.post("/upload/{name}")
+async def upload_file(name: str, file: UploadFile):
     with open(f"/Users/andresmuracciole/Desktop/Proyectos/find_your_clone/you_photo/photo.jpg", "wb") as f:
         f.write(file.file.read())
     #return {"filename": file.filename, "content_type": file.content_type}
     try:
-        result = mainFunction()
-        return {"result": result}
+        result = mainFunction(name)
+        return {"message": result}
     except Exception as e:
         return {"error": str(e)}
