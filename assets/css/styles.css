@@ -350,8 +350,8 @@ span{
     }
 
 
-    .img_bot_container img{
-        width: 100%;
+    .img_bot_container_spi img{
+        width: 50%;
         height: auto;
         margin: 0;
         margin-top: 0%;
@@ -501,7 +501,7 @@ span{
     }
 
 
-    .img_bot_container{
+    .img_bot_container_spi{
         width: 100%;
         margin: 0%;
         display: flex;
@@ -1320,8 +1320,8 @@ span{
     }
 
 
-    .img_bot_container img{
-        width: 70%;
+    .img_bot_container_spi img{
+        width: 50%;
         height: auto;
         margin: 0;
         margin-top: 0%;
@@ -1469,7 +1469,7 @@ span{
     }
 
 
-    .img_bot_container{
+    .img_bot_container_spi{
         width: 100%;
         margin: 0%;
         display: flex;
