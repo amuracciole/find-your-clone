@@ -31,6 +31,6 @@ if __name__ == "__main__":
     uvicorn_command = "uvicorn app:app --host 0.0.0.0 --port 8765"
 
 
-    # Ejecutar ambos comandos en segundo plano
+    #Ejecutar ambos comandos en segundo plano
     #run_command(http_server_command + " &")
     run_command(uvicorn_command)

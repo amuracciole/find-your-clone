@@ -1,0 +1,2 @@
+At that point, is necessary to rund index.html as Live Serer.
+index.html must be include in app.py later

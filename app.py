@@ -1,5 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
+from pathlib import Path
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from functions import *
@@ -20,6 +22,8 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def index():
+    #index_path = Path("index.html")
+    #return FileResponse(index_path)
     return {"message": "pagina principal"}
 
 @app.post("/upload/{name}")
